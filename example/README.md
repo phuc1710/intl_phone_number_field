@@ -1,4 +1,4 @@
-# intl_phone_number_field_example
+# example
 
 A new Flutter project.
 

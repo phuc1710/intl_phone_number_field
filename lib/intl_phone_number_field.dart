@@ -33,6 +33,7 @@ class InternationalPhoneNumberInput extends StatefulWidget {
   final CountryConfig countryConfig;
   final PhoneConfig phoneConfig;
   final CountryCodeModel initCountry;
+  final List<CountryCodeModel> suggestedCountries;
   final dynamic Function(IntPhoneNumber number)? onInputChanged;
   final double betweenPadding;
   final MaskedInputFormatter? formatter;
@@ -45,6 +46,7 @@ class InternationalPhoneNumberInput extends StatefulWidget {
       this.height = 60,
       this.inputFormatters = const [],
       CountryCodeModel? initCountry,
+      this.suggestedCountries = const [],
       this.betweenPadding = 23,
       this.onInputChanged,
       this.loadFromJson,
@@ -57,18 +59,14 @@ class InternationalPhoneNumberInput extends StatefulWidget {
       : dialogConfig = dialogConfig ?? DialogConfig(),
         controller = controller ?? TextEditingController(),
         countryConfig = countryConfig ?? CountryConfig(),
-        initCountry = initCountry ??
-            CountryCodeModel(
-                name: "United States", dial_code: "+1", code: "US"),
+        initCountry = initCountry ?? CountryCodeModel(name: "United States", dial_code: "+1", code: "US"),
         phoneConfig = phoneConfig ?? PhoneConfig();
 
   @override
-  State<InternationalPhoneNumberInput> createState() =>
-      _InternationalPhoneNumberInputState();
+  State<InternationalPhoneNumberInput> createState() => _InternationalPhoneNumberInputState();
 }
 
-class _InternationalPhoneNumberInputState
-    extends State<InternationalPhoneNumberInput> {
+class _InternationalPhoneNumberInputState extends State<InternationalPhoneNumberInput> {
   List<CountryCodeModel>? countries;
   late CountryCodeModel selected;
 
@@ -81,16 +79,12 @@ class _InternationalPhoneNumberInputState
     if (widget.loadFromJson == null) {
       getAllCountry();
     } else {
-      widget.loadFromJson!()
-          .then((data) => data != null ? loadFromJson(data) : getAllCountry());
+      widget.loadFromJson!().then((data) => data != null ? loadFromJson(data) : getAllCountry());
     }
     node = widget.phoneConfig.focusNode ?? FocusNode();
-    if (widget.phoneConfig.autovalidateMode == AutovalidateMode.always &&
-        widget.validator != null) {
+    if (widget.phoneConfig.autovalidateMode == AutovalidateMode.always && widget.validator != null) {
       String? error = widget.validator!(IntPhoneNumber(
-          code: selected.code,
-          dial_code: selected.dial_code,
-          number: widget.controller.text.trimLeft().trimRight()));
+          code: selected.code, dial_code: selected.dial_code, number: widget.controller.text.trimLeft().trimRight()));
       if (errorText != error) {
         errorText = error;
       }
@@ -103,15 +97,11 @@ class _InternationalPhoneNumberInputState
   void controllerOnChange() {
     if (widget.onInputChanged != null) {
       widget.onInputChanged!(IntPhoneNumber(
-          code: selected.code,
-          dial_code: selected.dial_code,
-          number: widget.controller.text.trimLeft().trimRight()));
+          code: selected.code, dial_code: selected.dial_code, number: widget.controller.text.trimLeft().trimRight()));
     }
     if (widget.validator != null) {
       String? error = widget.validator!(IntPhoneNumber(
-          code: selected.code,
-          dial_code: selected.dial_code,
-          number: widget.controller.text.trimLeft().trimRight()));
+          code: selected.code, dial_code: selected.dial_code, number: widget.controller.text.trimLeft().trimRight()));
       if (errorText != error) {
         setState(() {
           errorText = error;
@@ -129,13 +119,10 @@ class _InternationalPhoneNumberInputState
 
   void listenNode() {
     if (node.hasFocus &&
-        widget.phoneConfig.autovalidateMode ==
-            AutovalidateMode.onUserInteraction &&
+        widget.phoneConfig.autovalidateMode == AutovalidateMode.onUserInteraction &&
         widget.validator != null) {
       String? error = widget.validator!(IntPhoneNumber(
-          code: selected.code,
-          dial_code: selected.dial_code,
-          number: widget.controller.text.trimLeft().trimRight()));
+          code: selected.code, dial_code: selected.dial_code, number: widget.controller.text.trimLeft().trimRight()));
       if (errorText != error) {
         errorText = error;
         if (mounted) setState(() {});
@@ -159,33 +146,28 @@ class _InternationalPhoneNumberInputState
                       if (!widget.inactive && countries != null) {
                         showModalBottomSheet(
                             shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.vertical(
-                                    top: Radius.circular(30))),
+                                borderRadius: BorderRadius.vertical(top: Radius.circular(30))),
                             barrierColor: Colors.black.withOpacity(0.6),
                             isScrollControlled: true,
-                            backgroundColor:
-                                widget.dialogConfig.backgroundColor,
+                            backgroundColor: widget.dialogConfig.backgroundColor,
                             context: context,
                             builder: (context) {
-                              return SingleChildScrollView(
-                                child: CountryCodeBottomSheet(
-                                  countries: countries!,
-                                  selected: selected,
-                                  onSelected: (countryCodeModel) {
-                                    setState(() {
-                                      selected = countryCodeModel;
-                                    });
-                                    if (widget.onInputChanged != null) {
-                                      widget.onInputChanged!(IntPhoneNumber(
-                                          code: selected.code,
-                                          dial_code: selected.dial_code,
-                                          number: widget.controller.text
-                                              .trimLeft()
-                                              .trimRight()));
-                                    }
-                                  },
-                                  dialogConfig: widget.dialogConfig,
-                                ),
+                              return CountryCodeBottomSheet(
+                                countries: countries!,
+                                suggestedCountries: widget.suggestedCountries,
+                                selected: selected,
+                                onSelected: (countryCodeModel) {
+                                  setState(() {
+                                    selected = countryCodeModel;
+                                  });
+                                  if (widget.onInputChanged != null) {
+                                    widget.onInputChanged!(IntPhoneNumber(
+                                        code: selected.code,
+                                        dial_code: selected.dial_code,
+                                        number: widget.controller.text.trimLeft().trimRight()));
+                                  }
+                                },
+                                dialogConfig: widget.dialogConfig,
                               );
                             });
                       }
@@ -238,23 +220,15 @@ class _InternationalPhoneNumberInputState
                   textInputType: TextInputType.number,
                   expands: true,
                   autoFocus: widget.phoneConfig.autoFocus,
-                  inputFormatters: [
-                    ...widget.inputFormatters,
-                    if (widget.formatter != null) widget.formatter!
-                  ],
-                  focusedColor: errorText != null
-                      ? widget.phoneConfig.errorColor
-                      : widget.phoneConfig.focusedColor,
-                  enabledColor: errorText != null
-                      ? widget.phoneConfig.errorColor
-                      : widget.phoneConfig.enabledColor,
+                  inputFormatters: [...widget.inputFormatters, if (widget.formatter != null) widget.formatter!],
+                  focusedColor: errorText != null ? widget.phoneConfig.errorColor : widget.phoneConfig.focusedColor,
+                  enabledColor: errorText != null ? widget.phoneConfig.errorColor : widget.phoneConfig.enabledColor,
                   showCursor: widget.phoneConfig.showCursor,
                   borderWidth: widget.phoneConfig.borderWidth,
                 )),
           ]),
         ),
-        if ((widget.phoneConfig.popUpErrorText && errorText != null) ||
-            !widget.phoneConfig.popUpErrorText)
+        if ((widget.phoneConfig.popUpErrorText && errorText != null) || !widget.phoneConfig.popUpErrorText)
           SizedBox(
             width: double.infinity,
             child: Padding(
@@ -296,11 +270,9 @@ class _InternationalPhoneNumberInputState
 
 class IntPhoneNumber {
   String code, dial_code, number;
-  IntPhoneNumber(
-      {required this.code, required this.dial_code, required this.number});
+  IntPhoneNumber({required this.code, required this.dial_code, required this.number});
   String get fullNumber => "$dial_code $number";
   String get rawNumber => number.replaceAll(" ", "");
   String get rawDialCode => dial_code.replaceAll("+", "");
-  String get rawFullNumber =>
-      fullNumber.replaceAll(" ", "").replaceAll("+", "");
+  String get rawFullNumber => fullNumber.replaceAll(" ", "").replaceAll("+", "");
 }

@@ -7,12 +7,14 @@ import 'rixa_textfield.dart';
 
 class CountryCodeBottomSheet extends StatefulWidget {
   final List<CountryCodeModel> countries;
+  final List<CountryCodeModel>? suggestedCountries;
   final Function(CountryCodeModel countryCodeModel) onSelected;
   final CountryCodeModel? selected;
   final DialogConfig dialogConfig;
   const CountryCodeBottomSheet(
       {super.key,
       required this.countries,
+      required this.suggestedCountries,
       required this.onSelected,
       this.selected,
       required this.dialogConfig});
@@ -22,12 +24,17 @@ class CountryCodeBottomSheet extends StatefulWidget {
 }
 
 class _CountryCodeBottomSheetState extends State<CountryCodeBottomSheet> {
-  late List<CountryCodeModel> mainCountries, searchCountries;
+  late List<CountryCodeModel> mainCountries, searchCountries, suggestedCountries;
   final TextEditingController searchController = TextEditingController();
   @override
   void initState() {
     mainCountries = widget.countries;
+    suggestedCountries = widget.suggestedCountries ?? [];
     searchCountries = widget.countries.toList();
+    for (var country in widget.suggestedCountries ?? []) {
+      searchCountries.removeAt(searchCountries.indexWhere((element) => element.code == country.code));
+    }
+    searchCountries = suggestedCountries + searchCountries;
     searchController.addListener(listenSearchController);
 
     super.initState();
@@ -52,15 +59,13 @@ class _CountryCodeBottomSheetState extends State<CountryCodeBottomSheet> {
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 22),
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Center(
                   child: Container(
                 height: 5,
                 width: 145,
-                decoration: BoxDecoration(
-                    color: widget.dialogConfig.topBarColor,
-                    borderRadius: BorderRadius.circular(30)),
+                decoration:
+                    BoxDecoration(color: widget.dialogConfig.topBarColor, borderRadius: BorderRadius.circular(30)),
               )),
               const SizedBox(height: 25),
               Text(
@@ -93,9 +98,7 @@ class _CountryCodeBottomSheetState extends State<CountryCodeBottomSheet> {
           Expanded(
             child: ListView(
               children: [
-                if (widget.selected != null &&
-                    searchCountries.any(
-                        (element) => element.code == widget.selected?.code))
+                if (widget.selected != null && searchCountries.any((element) => element.code == widget.selected?.code))
                   TextButton(
                       onPressed: () {
                         widget.onSelected(widget.selected!);
@@ -107,11 +110,8 @@ class _CountryCodeBottomSheetState extends State<CountryCodeBottomSheet> {
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
                       child: CountryWidget(
-                          countryCodeModel: widget.selected!,
-                          isSelected: true,
-                          dialogConfig: widget.dialogConfig)),
-                for (var country in searchCountries
-                    .where((element) => element.code != widget.selected?.code))
+                          countryCodeModel: widget.selected!, isSelected: true, dialogConfig: widget.dialogConfig)),
+                for (var country in searchCountries.where((element) => element.code != widget.selected?.code))
                   TextButton(
                       onPressed: () {
                         widget.onSelected(country);
@@ -123,9 +123,7 @@ class _CountryCodeBottomSheetState extends State<CountryCodeBottomSheet> {
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
                       child: CountryWidget(
-                          countryCodeModel: country,
-                          isSelected: false,
-                          dialogConfig: widget.dialogConfig))
+                          countryCodeModel: country, isSelected: false, dialogConfig: widget.dialogConfig))
               ],
             ),
           )
@@ -135,10 +133,14 @@ class _CountryCodeBottomSheetState extends State<CountryCodeBottomSheet> {
   }
 
   void search(String search) {
-    searchCountries = mainCountries
-        .where((element) =>
-            element.name.toLowerCase().contains(search.toLowerCase()))
-        .toList();
-    setState(() {});
+    if (num.tryParse(search) != null) {
+      searchCountries =
+          mainCountries.where((element) => element.dial_code.toString().contains(search.toString())).toList();
+      setState(() {});
+    } else {
+      searchCountries =
+          mainCountries.where((element) => element.name.toLowerCase().contains(search.toLowerCase())).toList();
+      setState(() {});
+    }
   }
 }

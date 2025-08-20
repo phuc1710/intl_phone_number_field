@@ -1,5 +1,6 @@
-import 'package:country_flags/country_flags.dart';
+// import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
+import 'package:world_flags/world_flags.dart';
 
 import '../models/country_code_model.dart';
 
@@ -16,10 +17,10 @@ class FlagView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return isFlat
-        ? CountryFlag.fromCountryCode(
-            countryCodeModel.code.toUpperCase(),
+        ? CountryFlag.simplified(
+            WorldCountry.fromAnyCode(countryCodeModel.code.toUpperCase()),
             width: size * 1.17,
-            shape: const RoundedRectangle(14),
+            // shape: const RoundedRectangle(14),
           )
         : Text(
             countryCodeModel.code.toUpperCase().replaceAllMapped(
