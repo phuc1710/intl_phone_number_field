@@ -12,6 +12,7 @@ import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'models/country_code_model.dart';
 import 'models/country_config.dart';
 import 'models/dialog_config.dart';
+import 'models/input_config.dart';
 import 'models/phone_config.dart';
 import 'util/general_util.dart';
 import 'view/country_code_bottom_sheet.dart';
@@ -29,6 +30,7 @@ class InternationalPhoneNumberInput extends StatefulWidget {
   final TextEditingController controller;
   final double? height;
   final bool inactive;
+  final InputConfig inputConfig;
   final DialogConfig dialogConfig;
   final CountryConfig countryConfig;
   final PhoneConfig phoneConfig;
@@ -53,10 +55,12 @@ class InternationalPhoneNumberInput extends StatefulWidget {
       this.formatter,
       this.validator,
       this.inactive = false,
+      InputConfig? inputConfig,
       DialogConfig? dialogConfig,
       CountryConfig? countryConfig,
       PhoneConfig? phoneConfig})
-      : dialogConfig = dialogConfig ?? DialogConfig(),
+      : inputConfig = inputConfig ?? const InputConfig(),
+        dialogConfig = dialogConfig ?? DialogConfig(),
         controller = controller ?? TextEditingController(),
         countryConfig = countryConfig ?? CountryConfig(),
         initCountry = initCountry ?? CountryCodeModel(name: "United States", dial_code: "+1", code: "US"),
@@ -138,11 +142,11 @@ class _InternationalPhoneNumberInputState extends State<InternationalPhoneNumber
           height: widget.height,
           child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Expanded(
-                flex: 10,
+                flex: widget.inputConfig.countryFlex,
                 child: SizedBox(
                   height: widget.height,
-                  child: TextButton(
-                    onPressed: () {
+                  child: GestureDetector(
+                    onTap: () {
                       if (!widget.inactive && countries != null) {
                         showModalBottomSheet(
                             shape: const RoundedRectangleBorder(
@@ -172,28 +176,29 @@ class _InternationalPhoneNumberInputState extends State<InternationalPhoneNumber
                             });
                       }
                     },
-                    style: TextButton.styleFrom(
-                      minimumSize: Size.zero,
-                      padding: EdgeInsets.zero,
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    ),
                     child: Container(
-                      width: double.infinity,
-                      height: double.infinity,
                       decoration: widget.countryConfig.decoration,
                       child: Row(
+                        spacing: widget.countryConfig.spacing,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          FlagView(
-                            countryCodeModel: selected,
-                            isFlat: widget.countryConfig.flatFlag,
-                            size: widget.countryConfig.flagSize,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            selected.dial_code,
-                            style: widget.countryConfig.textStyle,
-                          )
+                          if (widget.countryConfig.dropDownIconBuilder != null &&
+                              widget.countryConfig.dropDownIconPosition == DropDownIconPosition.leading)
+                            widget.countryConfig.dropDownIconBuilder!(context),
+                          if (!widget.countryConfig.noFlag)
+                            FlagView(
+                              countryCodeModel: selected,
+                              isFlat: widget.countryConfig.flatFlag,
+                              size: widget.countryConfig.flagSize,
+                            ),
+                          if (!widget.countryConfig.noCode)
+                            Text(
+                              selected.dial_code,
+                              style: widget.countryConfig.textStyle,
+                            ),
+                          if (widget.countryConfig.dropDownIconBuilder != null &&
+                              widget.countryConfig.dropDownIconPosition == DropDownIconPosition.trailing)
+                            widget.countryConfig.dropDownIconBuilder!(context),
                         ],
                       ),
                     ),
@@ -201,7 +206,7 @@ class _InternationalPhoneNumberInputState extends State<InternationalPhoneNumber
                 )),
             SizedBox(width: widget.betweenPadding),
             Expanded(
-                flex: 18,
+                flex: widget.inputConfig.phoneFieldFlex,
                 child: RixaTextField(
                   hintText: widget.phoneConfig.hintText ?? "",
                   hintStyle: widget.phoneConfig.hintStyle,

@@ -6,28 +6,25 @@ import '../models/country_code_model.dart';
 
 class FlagView extends StatelessWidget {
   final CountryCodeModel countryCodeModel;
-  final double size;
+  final Size size;
   final bool isFlat;
+  final BoxDecoration? decoration;
   const FlagView(
-      {required this.countryCodeModel,
-      required this.size,
-      required this.isFlat,
-      super.key});
+      {required this.countryCodeModel, required this.size, required this.isFlat, this.decoration, super.key});
 
   @override
   Widget build(BuildContext context) {
     return isFlat
         ? CountryFlag.simplified(
             WorldCountry.fromAnyCode(countryCodeModel.code.toUpperCase()),
-            width: size * 1.17,
-            // shape: const RoundedRectangle(14),
+            width: countryCodeModel.code.toUpperCase() == "NP" ? size.height : size.width,
+            height: size.height,
+            decoration: decoration,
           )
         : Text(
             countryCodeModel.code.toUpperCase().replaceAllMapped(
-                RegExp(r'[A-Z]'),
-                (match) => String.fromCharCode(
-                    match.group(0)!.codeUnitAt(0) + 127397)),
-            style: TextStyle(fontSize: size),
+                RegExp(r'[A-Z]'), (match) => String.fromCharCode(match.group(0)!.codeUnitAt(0) + 127397)),
+            style: TextStyle(fontSize: size.height),
           );
   }
 }

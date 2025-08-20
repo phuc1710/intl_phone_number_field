@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 // ignore: depend_on_referenced_packages
 import 'package:intl_phone_number_field/intl_phone_number_field.dart';
+import 'package:intl_phone_number_field/models/input_config.dart';
 
 void main() {
   runApp(const MyApp());
@@ -57,12 +58,12 @@ class _MyHomePageState extends State<MyHomePage> {
                   CountryCodeModel(name: "England", dial_code: "+44", code: "GB"),
                   CountryCodeModel(name: "United Arab Emirates", dial_code: "+971", code: "AE"),
                 ],
-                height: 60,
+                height: 48,
                 controller: controller,
                 inputFormatters: const [],
                 formatter: MaskedInputFormatter('### ### ## ##'),
                 initCountry: CountryCodeModel(name: "United States", dial_code: "+1", code: "US"),
-                betweenPadding: 23,
+                betweenPadding: 8,
                 onInputChanged: (phone) {
                   print(phone.code);
                   print(phone.dial_code);
@@ -85,34 +86,41 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Image.asset("assets/check.png", width: 20, fit: BoxFit.fitWidth),
                   ),
                   textStyle: TextStyle(
-                    color: const Color(0xFFFAFAFA).withOpacity(0.7),
+                    color: const Color(0xFFFAFAFA).withValues(alpha: 0.7),
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                   ),
                   searchBoxTextStyle: TextStyle(
-                    color: const Color(0xFFFAFAFA).withOpacity(0.7),
+                    color: const Color(0xFFFAFAFA).withValues(alpha: 0.7),
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                   ),
                   titleStyle: const TextStyle(color: Color(0xFFFAFAFA), fontSize: 18, fontWeight: FontWeight.w700),
                   searchBoxHintStyle: TextStyle(
-                    color: const Color(0xFFFAFAFA).withOpacity(0.7),
+                    color: const Color(0xFFFAFAFA).withValues(alpha: 0.7),
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
+                inputConfig: InputConfig(countryFlex: 68, phoneFieldFlex: 271),
                 countryConfig: CountryConfig(
                   decoration: BoxDecoration(
-                    border: Border.all(width: 2, color: const Color(0xFF3f4046)),
+                    border: Border.all(width: 1, color: const Color(0xFF3f4046)),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   flatFlag: true,
                   noFlag: false,
+                  noCode: true,
                   textStyle: const TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w600),
+                  dropDownIconBuilder: (context) {
+                    return Icon(Icons.keyboard_arrow_down, color: Colors.black);
+                  },
+                  dropDownIconPosition: DropDownIconPosition.trailing,
+                  spacing: 0,
                 ),
                 validator: (number) {
                   if (number.number.isEmpty) {
-                    return "The phone number cannot be left emptyssss";
+                    return "The phone number cannot be left empty";
                   }
                   return null;
                 },
@@ -126,7 +134,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   focusNode: null,
                   radius: 8,
                   hintText: "Phone Number",
-                  borderWidth: 2,
+                  borderWidth: 1,
                   backgroundColor: Colors.transparent,
                   decoration: null,
                   popUpErrorText: true,
