@@ -81,14 +81,16 @@ class _CountryCodeBottomSheetState extends State<CountryCodeBottomSheet> {
                 radius: widget.dialogConfig.searchBoxRadius,
                 enabledColor: Colors.transparent,
                 focusedColor: Colors.transparent,
-                prefixIcon: Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 24),
-                  child: Icon(
-                    Icons.search,
-                    color: widget.dialogConfig.searchBoxIconColor,
-                    size: 20,
-                  ),
-                ),
+                prefixIcon: widget.dialogConfig.searchBoxPrefixIcon ??
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20, right: 24),
+                      child: Icon(
+                        Icons.search,
+                        color: widget.dialogConfig.searchBoxIconColor,
+                        size: 20,
+                      ),
+                    ),
+                suffixIcon: widget.dialogConfig.searchBoxSuffixIcon,
                 isUnderline: false,
                 noInputBorder: true,
                 backgroundColor: widget.dialogConfig.searchBoxBackgroundColor,

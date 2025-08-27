@@ -58,7 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   CountryCodeModel(name: "England", dial_code: "+44", code: "GB"),
                   CountryCodeModel(name: "United Arab Emirates", dial_code: "+971", code: "AE"),
                 ],
-                height: 48,
+                height: 60,
                 controller: controller,
                 inputFormatters: const [],
                 formatter: MaskedInputFormatter('### ### ## ##'),

@@ -9,6 +9,7 @@ class DialogConfig {
   Size itemFlagSize;
   bool flatFlag;
   String title, searchHintText;
+  Widget? searchBoxPrefixIcon, searchBoxSuffixIcon;
   DialogConfig({
     this.backgroundColor = const Color(0xFF444448),
     this.searchBoxBackgroundColor = const Color(0xFF56565a),
@@ -26,6 +27,8 @@ class DialogConfig {
     TextStyle? searchBoxTextStyle,
     TextStyle? titleStyle,
     TextStyle? searchBoxHintStyle,
+    Widget? searchBoxPrefixIcon,
+    Widget? searchBoxSuffixIcon,
   })  : textStyle = textStyle ??
             TextStyle(color: const Color(0xFFFAFAFA).withOpacity(0.7), fontSize: 14, fontWeight: FontWeight.w600),
         searchBoxTextStyle = searchBoxTextStyle ??
