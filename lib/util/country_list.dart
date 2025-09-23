@@ -171,7 +171,7 @@ var countries = [
   {"name": "Nauru", "dial_code": "+674", "code": "NR"},
   {"name": "Nepal", "dial_code": "+977", "code": "NP"},
   {"name": "Netherlands", "dial_code": "+31", "code": "NL"},
-  {"name": "Netherlands Antilles", "dial_code": "+599", "code": "AN"},
+  // {"name": "Netherlands Antilles", "dial_code": "+599", "code": "AN"}, // Dissolution in 2010
   {"name": "New Caledonia", "dial_code": "+687", "code": "NC"},
   {"name": "New Zealand", "dial_code": "+64", "code": "NZ"},
   {"name": "Nicaragua", "dial_code": "+505", "code": "NI"},
