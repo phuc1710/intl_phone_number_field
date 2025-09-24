@@ -10,6 +10,8 @@ class DialogConfig {
   bool flatFlag;
   String title, searchHintText;
   Widget? searchBoxPrefixIcon, searchBoxSuffixIcon;
+  double? splashRadius;
+  Color? splashColor;
   DialogConfig({
     this.backgroundColor = const Color(0xFF444448),
     this.searchBoxBackgroundColor = const Color(0xFF56565a),
@@ -22,6 +24,8 @@ class DialogConfig {
     this.searchBoxRadius = 7,
     this.title = "Country Codes",
     this.searchHintText = "Search",
+    this.splashRadius = 0,
+    this.splashColor = Colors.black,
     Widget? selectedIcon,
     TextStyle? textStyle,
     TextStyle? searchBoxTextStyle,

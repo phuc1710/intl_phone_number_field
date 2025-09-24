@@ -107,10 +107,9 @@ class _CountryCodeBottomSheetState extends State<CountryCodeBottomSheet> {
                         Navigator.pop(context);
                       },
                       style: TextButton.styleFrom(
-                        minimumSize: Size.zero,
-                        padding: EdgeInsets.zero,
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      ),
+                          minimumSize: Size.zero,
+                          padding: EdgeInsets.zero,
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap),
                       child: CountryWidget(
                           countryCodeModel: widget.selected!, isSelected: true, dialogConfig: widget.dialogConfig)),
                 for (var country in searchCountries.where((element) => element.code != widget.selected?.code))
@@ -120,10 +119,12 @@ class _CountryCodeBottomSheetState extends State<CountryCodeBottomSheet> {
                         Navigator.pop(context);
                       },
                       style: TextButton.styleFrom(
-                        minimumSize: Size.zero,
-                        padding: EdgeInsets.zero,
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      ),
+                          minimumSize: Size.zero,
+                          padding: EdgeInsets.zero,
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          overlayColor: widget.dialogConfig.splashColor,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(widget.dialogConfig.splashRadius ?? 0))),
                       child: CountryWidget(
                           countryCodeModel: country, isSelected: false, dialogConfig: widget.dialogConfig))
               ],
