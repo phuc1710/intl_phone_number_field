@@ -88,7 +88,10 @@ class _InternationalPhoneNumberInputState extends State<InternationalPhoneNumber
     node = widget.phoneConfig.focusNode ?? FocusNode();
     if (widget.phoneConfig.autovalidateMode == AutovalidateMode.always && widget.validator != null) {
       String? error = widget.validator!(IntPhoneNumber(
-          code: selected.code, dial_code: selected.dial_code, number: widget.controller.text.trimLeft().trimRight()));
+          code: selected.code,
+          dial_code: selected.dial_code,
+          number: widget.controller.text.trimLeft().trimRight(),
+          name: selected.name));
       if (errorText != error) {
         errorText = error;
       }
@@ -101,11 +104,17 @@ class _InternationalPhoneNumberInputState extends State<InternationalPhoneNumber
   void controllerOnChange() {
     if (widget.onInputChanged != null) {
       widget.onInputChanged!(IntPhoneNumber(
-          code: selected.code, dial_code: selected.dial_code, number: widget.controller.text.trimLeft().trimRight()));
+          code: selected.code,
+          dial_code: selected.dial_code,
+          number: widget.controller.text.trimLeft().trimRight(),
+          name: selected.name));
     }
     if (widget.validator != null) {
       String? error = widget.validator!(IntPhoneNumber(
-          code: selected.code, dial_code: selected.dial_code, number: widget.controller.text.trimLeft().trimRight()));
+          code: selected.code,
+          dial_code: selected.dial_code,
+          number: widget.controller.text.trimLeft().trimRight(),
+          name: selected.name));
       if (errorText != error) {
         setState(() {
           errorText = error;
@@ -126,7 +135,10 @@ class _InternationalPhoneNumberInputState extends State<InternationalPhoneNumber
         widget.phoneConfig.autovalidateMode == AutovalidateMode.onUserInteraction &&
         widget.validator != null) {
       String? error = widget.validator!(IntPhoneNumber(
-          code: selected.code, dial_code: selected.dial_code, number: widget.controller.text.trimLeft().trimRight()));
+          code: selected.code,
+          dial_code: selected.dial_code,
+          number: widget.controller.text.trimLeft().trimRight(),
+          name: selected.name));
       if (errorText != error) {
         errorText = error;
         if (mounted) setState(() {});
@@ -147,6 +159,7 @@ class _InternationalPhoneNumberInputState extends State<InternationalPhoneNumber
                   height: widget.height,
                   child: GestureDetector(
                     onTap: () {
+                      if (widget.phoneConfig.readOnly == true) return;
                       if (!widget.inactive && countries != null) {
                         showModalBottomSheet(
                             shape: const RoundedRectangleBorder(
@@ -168,7 +181,8 @@ class _InternationalPhoneNumberInputState extends State<InternationalPhoneNumber
                                     widget.onInputChanged!(IntPhoneNumber(
                                         code: selected.code,
                                         dial_code: selected.dial_code,
-                                        number: widget.controller.text.trimLeft().trimRight()));
+                                        number: widget.controller.text.trimLeft().trimRight(),
+                                        name: selected.name));
                                   }
                                 },
                                 dialogConfig: widget.dialogConfig,
@@ -230,6 +244,7 @@ class _InternationalPhoneNumberInputState extends State<InternationalPhoneNumber
                   enabledColor: errorText != null ? widget.phoneConfig.errorColor : widget.phoneConfig.enabledColor,
                   showCursor: widget.phoneConfig.showCursor,
                   borderWidth: widget.phoneConfig.borderWidth,
+                  readOnly: widget.phoneConfig.readOnly,
                 )),
           ]),
         ),
@@ -274,8 +289,8 @@ class _InternationalPhoneNumberInputState extends State<InternationalPhoneNumber
 }
 
 class IntPhoneNumber {
-  String code, dial_code, number;
-  IntPhoneNumber({required this.code, required this.dial_code, required this.number});
+  String code, dial_code, number, name;
+  IntPhoneNumber({required this.code, required this.dial_code, required this.number, required this.name});
   String get fullNumber => "$dial_code $number";
   String get rawNumber => number.replaceAll(" ", "");
   String get rawDialCode => dial_code.replaceAll("+", "");

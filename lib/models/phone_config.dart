@@ -17,6 +17,7 @@ class PhoneConfig {
   AutovalidateMode autovalidateMode;
   final TextStyle? floatingLabelStyle;
   final TextInputAction textInputAction;
+  final bool readOnly;
   PhoneConfig(
       {this.focusedColor = const Color(0xFF6D59BD),
       this.enabledColor = const Color(0xFF6D59BD),
@@ -38,12 +39,10 @@ class PhoneConfig {
       this.floatingLabelStyle,
       this.labelStyle,
       this.labelText,
-      this.textStyle = const TextStyle(
-          color: Colors.black, fontSize: 16, fontWeight: FontWeight.w400),
-      TextStyle? hintStyle})
-      : hintStyle = hintStyle ??
-            TextStyle(
-                color: Colors.black.withOpacity(0.5),
-                fontSize: 16,
-                fontWeight: FontWeight.w400);
+      this.textStyle = const TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w400),
+      TextStyle? hintStyle,
+      this.readOnly = false,
+      })
+      : hintStyle =
+            hintStyle ?? TextStyle(color: Colors.black.withOpacity(0.5), fontSize: 16, fontWeight: FontWeight.w400);
 }

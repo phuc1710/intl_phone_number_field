@@ -33,6 +33,7 @@ class RixaTextField extends StatelessWidget {
   final String? Function(String?)? validator;
   final TextStyle? floatingLabelStyle;
   final TextInputAction textInputAction;
+  final bool readOnly;
   RixaTextField({
     super.key,
     required this.hintText,
@@ -70,57 +71,43 @@ class RixaTextField extends StatelessWidget {
     this.padding = EdgeInsets.zero,
     EdgeInsetsGeometry? innerPadding,
     this.noInputBorder = false,
-  })  : innerPadding =
-            innerPadding ?? const EdgeInsets.symmetric(horizontal: 10),
+    this.readOnly = false,
+  })  : innerPadding = innerPadding ?? const EdgeInsets.symmetric(horizontal: 10),
         enabledBorder = !noInputBorder && isUnderline
             ? UnderlineInputBorder(
-                borderSide: BorderSide(
-                    color: enabledColor ?? Colors.black,
-                    width: borderWidth ?? 1),
+                borderSide: BorderSide(color: enabledColor ?? Colors.black, width: borderWidth ?? 1),
               )
             : !noInputBorder && !isUnderline
                 ? OutlineInputBorder(
-                    borderSide: BorderSide(
-                        color: enabledColor ?? Colors.black,
-                        width: borderWidth ?? 1),
+                    borderSide: BorderSide(color: enabledColor ?? Colors.black, width: borderWidth ?? 1),
                     borderRadius: BorderRadius.circular(radius))
                 : InputBorder.none,
         errorBorder = !noInputBorder && isUnderline
             ? UnderlineInputBorder(
-                borderSide: BorderSide(
-                    color: errorColor ?? const Color(0xFFFF5494),
-                    width: borderWidth ?? 1),
+                borderSide: BorderSide(color: errorColor ?? const Color(0xFFFF5494), width: borderWidth ?? 1),
               )
             : !noInputBorder && !isUnderline
                 ? OutlineInputBorder(
-                    borderSide: BorderSide(
-                        color: errorColor ?? const Color(0xFFFF5494),
-                        width: borderWidth ?? 1),
+                    borderSide: BorderSide(color: errorColor ?? const Color(0xFFFF5494), width: borderWidth ?? 1),
                     borderRadius: BorderRadius.circular(radius))
                 : InputBorder.none,
         focusedBorder = !noInputBorder && isUnderline
             ? UnderlineInputBorder(
-                borderSide: BorderSide(
-                    color: focusedColor ?? Colors.cyan,
-                    width: borderWidth ?? 1),
+                borderSide: BorderSide(color: focusedColor ?? Colors.cyan, width: borderWidth ?? 1),
               )
             : !noInputBorder && !isUnderline
                 ? OutlineInputBorder(
-                    borderSide: BorderSide(
-                        color: focusedColor ?? Colors.cyan,
-                        width: borderWidth ?? 1),
+                    borderSide: BorderSide(color: focusedColor ?? Colors.cyan, width: borderWidth ?? 1),
                     borderRadius: BorderRadius.circular(radius))
                 : InputBorder.none;
   @override
   Widget build(BuildContext context) {
     return Container(
       width: width,
-      decoration: decoration ??
-          BoxDecoration(
-              color: backgroundColor,
-              borderRadius: BorderRadius.circular(radius)),
+      decoration: decoration ?? BoxDecoration(color: backgroundColor, borderRadius: BorderRadius.circular(radius)),
       padding: padding,
       child: TextField(
+        readOnly: readOnly,
         controller: controller,
         maxLines: !expands ? maxLines : null,
         minLines: minLines,
